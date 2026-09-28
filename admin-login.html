@@ -12,7 +12,7 @@ html,body{height:100%}
 body{font-family:'Kanit','Sarabun',system-ui,sans-serif;color:var(--black);background:var(--yellow)}
 .page{display:grid;grid-template-columns:55.7fr 44.3fr;min-height:100vh}
 .left{background:var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 32px}
-.logo{width:clamp(140px,10.8vw,208px);aspect-ratio:1;border-radius:50%;background:#000}
+.logo{width:clamp(140px,10.8vw,208px);aspect-ratio:1;border-radius:50%;object-fit:cover;display:block}
 .brand{margin-top:24px;font-size:clamp(22px,1.7vw,32px);font-weight:600}
 .welcome{margin-top:clamp(48px,7vh,90px);font-size:clamp(56px,6.2vw,120px);font-weight:700;line-height:1;letter-spacing:-.02em}
 .lead{margin-top:clamp(24px,4vh,48px);font-size:clamp(20px,1.6vw,30px);font-weight:300;line-height:1.5;max-width:560px}
@@ -56,7 +56,7 @@ input::placeholder{color:var(--placeholder)}
 <body>
 <main class="page">
   <section class="left">
-    <div class="logo" role="img" aria-label="โลโก้ CEO เมากาว"></div>
+    <img class="logo" src="img/logo.jpg" alt="โลโก้ CEO เมากาว">
     <p class="brand">CEO เมากาว</p>
     <h2 class="welcome">admin</h2>
     <p class="lead">สำหรับผู้ดูแลระบบเท่านั้น<br>กรุณาเข้าสู่ระบบเพื่อจัดการกิจกรรม</p>
