@@ -81,12 +81,13 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   <form id="editForm"><div id="editFields"></div><div class="act"><button type="button" class="sec" id="cancel">ยกเลิก</button><button class="pri">บันทึก</button></div></form>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let cats=[],acts=[],cur='all',editId=null,tt;
 const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)};
-const NOSRV='ติดต่อเซิร์ฟเวอร์หลังบ้านไม่ได้ ต้องเปิดผ่าน http://127.0.0.1:3000';
+const NOSRV='ติดต่อเซิร์ฟเวอร์ไม่ได้ (เซิร์ฟเวอร์อาจกำลังตื่น รอสักครู่แล้วลองใหม่)';
 async function api(url,opt={}){
  let r;try{r=await fetch(url,opt)}catch(e){toast(NOSRV);throw new Error('api')}
  let d=null;try{d=await r.json()}catch(e){}
@@ -128,7 +129,7 @@ function render(){
  if(cur!=='all'&&!cats.some(c=>c.name===cur))cur='all';
  $('chips').innerHTML=['all',...cats.map(c=>c.name)].map(c=>`<button type="button" class="chip" data-c="${esc(c)}" aria-pressed="${c===cur}">${c==='all'?'ทั้งหมด':esc(c)}</button>`).join('');
  const list=acts.filter(a=>cur==='all'||a.category===cur);
- $('rows').innerHTML=list.length?list.map(a=>`<tr><td>${a.image?`<img class="th" src="${esc(a.image)}" alt="" referrerpolicy="no-referrer" onerror="this.removeAttribute('src');this.onerror=null">`:'<div class="th"></div>'}</td><td>${esc(a.name)}</td><td>${esc(a.category)}</td><td>${a.viewers} คน</td><td>${a.hours>0?a.hours+' ชม.':'ไม่ได้รับ'}</td><td class="b"><button class="sm" data-e="${a.id}">แก้ไข</button><button class="sm del" data-d="${a.id}">ลบ</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">ยังไม่มีกิจกรรมในหมวดนี้</td></tr>';
+ $('rows').innerHTML=list.length?list.map(a=>`<tr><td>${a.image?`<img class="th" src="${esc(assetUrl(a.image))}" alt="" referrerpolicy="no-referrer" onerror="this.removeAttribute('src');this.onerror=null">`:'<div class="th"></div>'}</td><td>${esc(a.name)}</td><td>${esc(a.category)}</td><td>${a.viewers} คน</td><td>${a.hours>0?a.hours+' ชม.':'ไม่ได้รับ'}</td><td class="b"><button class="sm" data-e="${a.id}">แก้ไข</button><button class="sm del" data-d="${a.id}">ลบ</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">ยังไม่มีกิจกรรมในหมวดนี้</td></tr>';
  $('cats').innerHTML=cats.length?cats.map(c=>`<div class="crow"><b>${esc(c.name)}</b><small>${c.count} กิจกรรม</small><button class="sm" data-r="${c.id}">แก้ไขชื่อ</button><button class="sm del" data-x="${c.id}">ลบ</button></div>`).join(''):'<p class="empty">ยังไม่มีหมวดหมู่</p>';
 }
 async function reload(){[cats,acts]=await Promise.all([api('/api/categories'),api('/api/activities')]);render()}

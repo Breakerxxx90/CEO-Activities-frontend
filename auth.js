@@ -1,6 +1,6 @@
 
 const f=document.getElementById('f'),err=document.getElementById('err'),mode=f.dataset.mode;
-const NOSRV='ติดต่อเซิร์ฟเวอร์หลังบ้านไม่ได้ — ต้องเปิดหน้านี้ผ่าน http://127.0.0.1:3000 (รัน npm start ในโฟลเดอร์ backend ก่อน) ไม่ใช่ Live Server หรือเปิดไฟล์ตรงๆ';
+const NOSRV='ติดต่อเซิร์ฟเวอร์ไม่ได้ (เซิร์ฟเวอร์อาจกำลังตื่น รอสักครู่ประมาณ 1 นาทีแล้วลองใหม่)';
 f.addEventListener('submit',async e=>{
   e.preventDefault();err.textContent='';
   const v=Object.fromEntries(new FormData(f));
@@ -11,6 +11,7 @@ f.addEventListener('submit',async e=>{
     if(!(r.headers.get('content-type')||'').includes('json')){err.textContent=NOSRV;return}
     const d=await r.json().catch(()=>({}));
     if(!r.ok){err.textContent=d.error||'เกิดข้อผิดพลาด ลองใหม่อีกครั้ง';return}
+    try{if(d.token)localStorage.setItem('token',d.token)}catch(_){}
     location.href=mode==='admin'?'admin.html':'home.html';
   }catch(_){err.textContent=NOSRV}
 });

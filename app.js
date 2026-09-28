@@ -49,21 +49,21 @@ const ICON={
  avatar:S('<circle cx="12" cy="12" r="12"/><circle cx="12" cy="9.5" r="3.6" fill="#fff"/><path d="M5.5 19.5c.8-3.5 3.4-5 6.5-5s5.7 1.5 6.5 5a10 10 0 0 1-13 0z" fill="#fff"/>')
 };
 const setAvatar=u=>document.querySelectorAll('[data-i="avatar"]').forEach(e=>{
- e.innerHTML=u?`<img class="pfp" src="${esc(u)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML=ICON.avatar">`:ICON.avatar});
+ e.innerHTML=u?`<img class="pfp" src="${esc(assetUrl(u))}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML=ICON.avatar">`:ICON.avatar});
 const PAGE=document.body.dataset.page;
 const NAV=[['home','home','home.html'],['activities','grid','activities.html'],['notifications','bell','notifications.html'],['profile','user','profile.html']];
 $('#nav').innerHTML=NAV.map(([p,i,h])=>`<a href="${h}" class="${p===PAGE?'on':''}" aria-label="${p}">${ICON[i]}</a>`).join('')+`<a class="out" href="login.html" aria-label="Logout">${ICON.logout}</a>`;
 document.querySelectorAll('[data-i]').forEach(e=>e.innerHTML=ICON[e.dataset.i]);
 applyI18n();
 
-const NOSRV='ติดต่อเซิร์ฟเวอร์หลังบ้านไม่ได้ — ต้องเปิดหน้านี้ผ่าน <b>http://127.0.0.1:3000</b> (รัน <code>npm start</code> ในโฟลเดอร์ backend ก่อน) ไม่ใช่ Live Server หรือเปิดไฟล์ตรงๆ';
+const NOSRV='ติดต่อเซิร์ฟเวอร์ไม่ได้ (เซิร์ฟเวอร์อาจกำลังตื่น รอสักครู่ประมาณ 1 นาทีแล้วลองใหม่)';
 const warn=m=>document.body.insertAdjacentHTML('afterbegin',`<div class="warn" role="alert">${m}</div>`);
 const nosrv=()=>Object.assign(new Error('nosrv'),{nosrv:1});
 const jget=async u=>{let r;try{r=await fetch(u)}catch(_){throw nosrv()}
  if(r.status===401){location.href='login.html';throw new Error('unauth')}
  if(!(r.headers.get('content-type')||'').includes('json'))throw nosrv();
  const d=await r.json();if(!r.ok)throw new Error(d.error||'HTTP '+r.status);return d};
-const img=a=>a.image?`<img src="${esc(a.image)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:'';
+const img=a=>a.image?`<img src="${esc(assetUrl(a.image))}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:'';
 const card=a=>`<a class="card" href="activity.html?id=${a.id}"><div class="img">${img(a)}</div><p>${esc(a.name)}</p><p>${t('viewers')}: <b>${a.viewers} ${t('people')}</b></p><p>${a.hours>0?t('gets'):t('nogets')}</p></a>`;
 const groups=(acts,cats)=>cats.map(c=>[c.name,acts.filter(a=>a.category===c.name)]).filter(g=>g[1].length);
 const rows=(gs,n=99,msg=t('none'))=>gs.map(([c,l])=>`<h3 class="row">${esc(c)} <i>${ICON.play}</i></h3><div class="cards">${l.slice(0,n).map(card).join('')}</div>`).join('')||`<p class="empty">${msg}</p>`;
