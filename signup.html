@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign Up | CEO เมากาว</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--yellow:#ffde59;--black:#000;--grey:#6b6b6b;--placeholder:#9a9a9a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Kanit','Sarabun',system-ui,sans-serif;color:var(--black);background:var(--yellow)}
+.page{display:grid;grid-template-columns:55.7fr 44.3fr;min-height:100vh}
+.left{background:var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 32px}
+.logo{width:clamp(140px,10.8vw,208px);aspect-ratio:1;border-radius:50%;background:#000}
+.brand{margin-top:24px;font-size:clamp(22px,1.7vw,32px);font-weight:600}
+.welcome{margin-top:clamp(48px,7vh,90px);font-size:clamp(56px,6.2vw,120px);font-weight:700;line-height:1;letter-spacing:-.02em}
+.lead{margin-top:clamp(24px,4vh,48px);font-size:clamp(20px,1.6vw,30px);font-weight:300;line-height:1.5;max-width:560px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:#000;color:#fff;border:0;border-radius:999px;font:400 clamp(16px,1.1vw,21px) 'Kanit',sans-serif;text-decoration:none;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{background:#222;transform:translateY(-1px)}
+.btn:focus-visible,.social:focus-visible,input:focus-visible,.forgot:focus-visible{outline:3px solid #1877f2;outline-offset:3px}
+.left .btn{width:min(485px,86%);height:62px;margin-top:clamp(28px,5vh,56px)}
+.right{background:#fff;border-radius:90px 0 0 90px;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.panel{width:min(610px,100%)}
+h1{text-align:center;font-size:clamp(28px,1.9vw,36px);font-weight:700}
+.sub{text-align:center;color:var(--grey);font-size:clamp(15px,1.05vw,20px);font-weight:300;margin-top:20px}
+form{margin-top:clamp(40px,8vh,96px)}
+.field{display:block;margin-bottom:clamp(24px,4vh,44px)}
+input{width:100%;height:57px;border:2px solid #000;border-radius:18px;padding:0 24px;font:400 16px 'Kanit',sans-serif;background:#fff;color:#000}
+input::placeholder{color:var(--placeholder)}
+.forgot{display:block;text-align:right;color:#444;font-size:15px;text-decoration:none;margin:-16px 12px 0 0}
+.forgot:hover{text-decoration:underline}
+.with{text-align:center;color:#555;font-size:15px;margin-top:40px}
+.socials{display:grid;grid-template-columns:1fr 1fr;gap:16px 80px;margin-top:20px}
+.social{display:flex;align-items:center;height:57px;border-radius:12px;color:#fff;text-decoration:none;font-size:16px;padding-left:12px;transition:filter .15s,transform .15s}
+.social:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.social span{flex:1;text-align:center;padding-right:36px}
+.social svg{width:34px;height:34px;flex:none}
+.fb{background:#1877f2}.line{background:#06c000}
+.ig{background:linear-gradient(90deg,#7b6cf0,#c46bd8 55%,#fb69c8);grid-column:1/-1;justify-self:center;width:calc(50% - 40px)}
+.nohave{text-align:center;color:#888;font-size:17px;margin-top:44px}
+.panel .btn.alt{display:flex;width:min(428px,100%);height:62px;margin:24px auto 0}
+@media (max-width:900px){
+ .page{grid-template-columns:1fr;grid-template-rows:auto auto}
+ .left{padding:40px 24px 64px}
+ .right{border-radius:40px 40px 0 0;margin-top:-32px;padding:40px 20px 56px}
+ .socials{gap:12px 16px}
+ .ig{width:calc(50% - 8px)}
+ form{margin-top:32px}
+}
+@media (max-width:480px){.socials{grid-template-columns:1fr}.ig{width:100%}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.err{color:#c62828;text-align:center;font-size:15px;min-height:22px;margin-top:-20px}
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="left">
+    <div class="logo" role="img" aria-label="โลโก้ CEO เมากาว"></div>
+    <p class="brand">CEO เมากาว</p>
+    <h2 class="welcome">welcome</h2>
+    <p class="lead">To stay connected with us please loin<br>with your personal info</p>
+    <a class="btn" href="login.html">Login</a>
+  </section>
+  <section class="right">
+    <div class="panel">
+      <h1>Sign Up</h1>
+      <p class="sub">Sign up easily and conveniently here!</p>
+      <form id="f" data-mode="signup">
+        <label class="field"><input type="text" name="username" placeholder="Username" aria-label="Username" required></label>
+        <label class="field"><input type="password" name="password" placeholder="password" aria-label="password" required></label>
+        <label class="field"><input type="password" name="confirmpassword" placeholder="Confirm password" aria-label="Confirm password" required></label>
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn alt" type="submit">Sign Up</button>
+        <p class="with">Sign up with</p>
+        <div class="socials">
+          <a class="social fb" href="#"><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#fff"/><circle cx="17" cy="17" r="14" fill="#1877f2"/><path d="M18.6 27v-8.2h2.7l.5-3.2h-3.2v-2c0-.9.4-1.7 1.8-1.7h1.5V9.1c-.3 0-1.3-.2-2.4-.2-2.5 0-4.1 1.5-4.1 4.2v2.5h-2.7v3.2h2.7V27z" fill="#fff"/></svg><span>Facebook</span></a>
+          <a class="social line" href="#"><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#fff"/><path d="M14 9c-3.9 0-7 2.5-7 5.7 0 1.8 1 3.4 2.6 4.4l-.6 2 2.4-1.2c.8.2 1.7.3 2.6.3 3.9 0 7-2.5 7-5.5S17.9 9 14 9z" fill="#06c000"/><path d="M27 19.5c0-2.5-2.4-4.5-5.4-4.5s-5.4 2-5.4 4.5 2.4 4.5 5.4 4.5c.700 0 1.4-.1 2-.3l1.8 1-.5-1.7c1.4-.8 2.1-2.1 2.1-3.5z" fill="#06c000" stroke="#fff" stroke-width="1.2"/></svg><span>Line</span></a>
+          <a class="social ig" href="#"><svg viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fdc830"/><stop offset=".45" stop-color="#f0324c"/><stop offset="1" stop-color="#7b3fe4"/></linearGradient></defs><rect x="1" y="1" width="32" height="32" rx="9" fill="url(#g)"/><rect x="8" y="8" width="18" height="18" rx="5.5" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="17" cy="17" r="4.3" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="22.2" cy="11.8" r="1.2" fill="#fff"/></svg><span>Instagram</span></a>
+        </div>
+        
+      </form>
+    </div>
+  </section>
+</main>
+<script src="auth.js"></script>
+</body>
+</html>

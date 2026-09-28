@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Playfair+Display:wght@800&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||"light"}catch(e){}</script>
+<link rel="stylesheet" href="style.css"><title>Activity</title></head><body data-page="activities"><div id="nav"></div>
+<main class="det" id="det" aria-live="polite"><p class="empty" data-t="loading">กำลังโหลด...</p></main>
+<script src="app.js"></script>
+<script>
+const send=async(u,m)=>{let r;try{r=await fetch(u,{method:m})}catch(_){throw nosrv()}
+ if(r.status===401){location.href='login.html';throw new Error('unauth')}
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'HTTP '+r.status);return d};
+(async()=>{
+ const id=+new URLSearchParams(location.search).get('id'),box=$('#det');
+ const [acts,mine,vw]=await Promise.all([jget('/api/activities'),jget('/api/me/joins'),send('/api/activities/'+id+'/view','POST').catch(()=>null)]);
+ const a=acts.find(x=>x.id===id);
+ if(!a){box.innerHTML=`<p class="empty">${t('notfound')} <a href="activities.html" style="text-decoration:underline">${t('back')}</a></p>`;return}
+ document.title=a.name;
+ box.innerHTML=`<div class="dl"><h2 class="cat">${esc(a.category)}</h2><div class="pic">${img(a)}</div></div>
+<div class="dr"><h1>${esc(a.name)}</h1>
+<p class="m">${t('viewers')}: <b>${vw?vw.viewers:a.viewers} ${t('people')}</b></p>
+<p class="m">${a.hours>0?`${t('hoursOf')}: <b>${a.hours} ${t('hrs')}</b>`:t('nogets')}</p>
+<button class="join" id="join" type="button"></button><p class="jerr" id="jerr" role="alert"></p>
+<section class="desc"><h3>${t('detail')}</h3><p></p></section></div>`;
+ $('.desc p').textContent=a.description||t('nodesc');
+ let joined=mine.includes(id);const jb=$('#join');
+ const paint=()=>{jb.textContent=joined?t('joined'):t('join');jb.classList.toggle('on',joined);jb.setAttribute('aria-pressed',joined)};
+ paint();
+ jb.onclick=async()=>{jb.disabled=true;
+  try{joined=(await send('/api/activities/'+id+'/join',joined?'DELETE':'POST')).joined;$('#jerr').textContent='';paint()}
+  catch(e){if(e.message!=='unauth')$('#jerr').textContent=e.nosrv?t('nosrvShort'):e.message}
+  jb.disabled=false};
+})().catch(e=>{if(e.message==='unauth')return;warn(e.nosrv?NOSRV:t('error')+': '+esc(e.message))});
+</script></body></html>

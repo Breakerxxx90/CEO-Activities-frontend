@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>จัดการกิจกรรม | Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--y:#ffde59;--p:#fdd8a0;--o:#f47b20;--g:#f0f0f0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Kanit,'Sarabun',sans-serif;background:var(--g);color:#111;padding:30px 36px 80px}
+:focus-visible{outline:3px solid #1877f2;outline-offset:2px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.bar{display:flex;align-items:center;gap:18px;background:var(--y);border-radius:14px;height:51px;padding:0 20px;width:min(825px,100%);font-size:17px}
+.bar svg{width:34px;height:34px}
+.gearw{position:relative}
+.gear{background:none;border:0;cursor:pointer;width:40px;height:40px;color:#111}
+.gear svg{width:100%;height:100%}
+.menu{position:absolute;right:0;top:46px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:6px;min-width:150px;z-index:9}
+.menu[hidden]{display:none}
+.menu button{width:100%;text-align:left;background:none;border:0;padding:10px 14px;font:400 16px Kanit,sans-serif;border-radius:8px;cursor:pointer}
+.menu button:hover{background:var(--g)}
+main{max-width:1000px;margin:36px 0 0 34px;display:grid;gap:28px}
+.card{background:#fff;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.09);padding:24px 28px}
+h2{font-size:19px;font-weight:600;margin-bottom:18px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+label{display:grid;gap:6px;font-size:15px}label small{color:#888}
+.w{grid-column:1/-1}
+input,select,textarea{font:300 16px Kanit,sans-serif;border:1.5px solid #d8d8d8;border-radius:10px;padding:10px 14px;background:#fff;width:100%}
+input[type=file]{padding:8px}
+.act{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}
+.pri,.sec,.sm{font:400 16px Kanit,sans-serif;border-radius:10px;cursor:pointer;border:1.5px solid #111;padding:10px 24px}
+.pri{background:var(--y);border-color:var(--y);color:#111;font-weight:600}
+.pri:hover{filter:brightness(.96)}
+.sec,.sm{background:#fff}.sm{padding:5px 14px;font-size:14px}.sm:hover,.sec:hover{background:var(--g)}
+.sm.del{color:#c62828;border-color:#c62828}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{border:1.5px solid #ddd;background:#fff;border-radius:999px;padding:5px 16px;font:400 15px Kanit,sans-serif;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--y);border-color:var(--y);font-weight:600}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;color:#777;font-weight:400;padding:8px 10px;border-bottom:1px solid #e3e3e3}
+td{padding:10px;border-bottom:1px solid #eee;vertical-align:middle}
+.th{width:44px;height:56px;border-radius:8px;background:var(--p);object-fit:cover;display:block}
+td.b{white-space:nowrap;text-align:right}td.b .sm{margin-left:6px}
+.empty{color:#888;padding:20px 10px}
+.pvi{max-height:140px;max-width:100%;width:auto;border-radius:10px;justify-self:start;background:var(--p)}
+.err{color:#c62828;font-size:14px}.err:empty{display:none}
+.crow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eee}
+.crow b{flex:1;font-weight:400;font-size:16px}.crow small{color:#888}
+.cadd{display:flex;gap:12px;margin-bottom:12px}
+dialog{border:0;border-radius:14px;padding:24px 28px;width:min(640px,94vw);margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111;color:#fff;padding:12px 22px;border-radius:999px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+@media (max-width:700px){body{padding:20px 14px 80px}main{margin-left:0}.g{grid-template-columns:1fr}.card{padding:20px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12"/><circle cx="12" cy="9.5" r="3.6" fill="#fff"/><path d="M5.5 19.5c.8-3.5 3.4-5 6.5-5s5.7 1.5 6.5 5a10 10 0 0 1-13 0z" fill="#fff"/></svg><span id="who"></span></div>
+  <div class="gearw">
+    <button class="gear" id="gear" aria-label="ตั้งค่า" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5l1.6 2.4 2.8-.7.9 2.7 2.7.9-.7 2.8 2.2 1.6-2.2 1.6.7 2.8-2.7.9-.9 2.7-2.8-.7L12 21.5l-1.6-2.4-2.8.7-.9-2.7-2.7-.9.7-2.8L2.5 12l2.2-1.6-.7-2.8 2.7-.9.9-2.7 2.8.7z"/></svg></button>
+    <div class="menu" id="menu" hidden><button id="logout">ออกจากระบบ</button></div>
+  </div>
+</header>
+<main>
+  <section class="card"><h2>เพิ่มกิจกรรมใหม่</h2>
+    <form id="addForm"><div id="addFields"></div><div class="act"><button class="pri">เพิ่มกิจกรรม</button></div></form>
+  </section>
+  <section class="card"><h2>ทั้งหมด</h2>
+    <div class="chips" id="chips" role="group" aria-label="กรองตามหมวดหมู่"></div>
+    <div class="tw"><table><thead><tr><th></th><th>ชื่อกิจกรรม</th><th>หมวดหมู่</th><th>ผู้เข้าชม</th><th>ชั่วโมง</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+  <section class="card"><h2>หมวดหมู่กิจกรรม</h2>
+    <form class="cadd" id="catForm"><input id="catName" placeholder="ชื่อหมวดหมู่ใหม่" aria-label="ชื่อหมวดหมู่ใหม่" required><button class="pri" style="white-space:nowrap">เพิ่มหมวดหมู่</button></form>
+    <div id="cats"></div>
+  </section>
+</main>
+<dialog id="dlg"><h2>แก้ไขกิจกรรม</h2>
+  <form id="editForm"><div id="editFields"></div><div class="act"><button type="button" class="sec" id="cancel">ยกเลิก</button><button class="pri">บันทึก</button></div></form>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let cats=[],acts=[],cur='all',editId=null,tt;
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)};
+const NOSRV='ติดต่อเซิร์ฟเวอร์หลังบ้านไม่ได้ ต้องเปิดผ่าน http://127.0.0.1:3000';
+async function api(url,opt={}){
+ let r;try{r=await fetch(url,opt)}catch(e){toast(NOSRV);throw new Error('api')}
+ let d=null;try{d=await r.json()}catch(e){}
+ if(r.status===401){location.href='admin-login.html';throw new Error('unauth')}
+ if(!r.ok){toast(d&&d.error||(d?'เกิดข้อผิดพลาด':NOSRV));throw new Error('api')}
+ return d}
+const J=(m,b)=>({method:m,headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+const run=fn=>async e=>{e&&e.preventDefault&&e.preventDefault();try{await fn(e)}catch(_){}};
+
+const FIELDS=p=>`<div class="g">
+<label>ชื่อกิจกรรม<input id="${p}n" required maxlength="120"></label>
+<label>หมวดหมู่<select id="${p}c" required></select></label>
+<label>จำนวนชั่วโมงที่ได้รับ <small>(0 = ไม่ได้รับชั่วโมง)</small><input id="${p}h" type="number" min="0" max="1000" value="0"></label>
+<label>อัปโหลดรูปภาพ<input id="${p}i" type="file" accept="image/*"></label>
+<label class="w">หรือใส่ลิงก์รูปภาพ <small>(ลิงก์ตรงของไฟล์รูป ถ้าเลือกไฟล์ด้วย จะใช้ไฟล์ที่อัปโหลด)</small><input id="${p}u" type="url" placeholder="https://example.com/photo.jpg"></label>
+<img class="w pvi" id="${p}p" alt="ตัวอย่างรูป" referrerpolicy="no-referrer" hidden><small class="w err" id="${p}m" role="alert"></small>
+<label class="w">รายละเอียด<textarea id="${p}d" rows="3" maxlength="2000"></textarea></label></div>`;
+$('addFields').innerHTML=FIELDS('a');$('editFields').innerHTML=FIELDS('e');
+
+const okUrl=u=>{try{const x=new URL(u);return x.protocol==='http:'||x.protocol==='https:'}catch(e){return false}};
+const prev=p=>{const b=$(p+'p'),m=$(p+'m'),f=$(p+'i').files[0],u=$(p+'u').value.trim();m.textContent='';
+ b.onerror=()=>{b.hidden=true;m.textContent='โหลดรูปจากลิงก์นี้ไม่ได้ ตรวจสอบว่าเป็นลิงก์ตรงของไฟล์รูป'};
+ if(f){b.src=URL.createObjectURL(f);b.hidden=false}
+ else if(u&&okUrl(u)){b.src=u;b.hidden=false}
+ else{b.removeAttribute('src');b.hidden=true;if(u)m.textContent='ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://'}};
+['a','e'].forEach(p=>{$(p+'i').onchange=()=>prev(p);$(p+'u').oninput=()=>prev(p)});
+const build=p=>{
+ const u=$(p+'u').value.trim(),file=$(p+'i').files[0];
+ if(u&&!okUrl(u)){toast('ลิงก์รูปต้องขึ้นต้นด้วย http:// หรือ https://');return null}
+ if(file&&file.size>5*1024*1024){toast('ไฟล์รูปต้องไม่เกิน 5MB');return null}
+ const f=new FormData();
+ f.append('name',$(p+'n').value.trim());f.append('category_id',$(p+'c').value);f.append('hours',$(p+'h').value||0);
+ f.append('description',$(p+'d').value.trim());f.append('image_url',u);if(file)f.append('image',file);
+ return f};
+
+function render(){
+ const opts=cats.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+ for(const id of['ac','ec']){const s=$(id),v=s.value;s.innerHTML=opts;if(cats.some(c=>c.id==v))s.value=v}
+ if(cur!=='all'&&!cats.some(c=>c.name===cur))cur='all';
+ $('chips').innerHTML=['all',...cats.map(c=>c.name)].map(c=>`<button type="button" class="chip" data-c="${esc(c)}" aria-pressed="${c===cur}">${c==='all'?'ทั้งหมด':esc(c)}</button>`).join('');
+ const list=acts.filter(a=>cur==='all'||a.category===cur);
+ $('rows').innerHTML=list.length?list.map(a=>`<tr><td>${a.image?`<img class="th" src="${esc(a.image)}" alt="" referrerpolicy="no-referrer" onerror="this.removeAttribute('src');this.onerror=null">`:'<div class="th"></div>'}</td><td>${esc(a.name)}</td><td>${esc(a.category)}</td><td>${a.viewers} คน</td><td>${a.hours>0?a.hours+' ชม.':'ไม่ได้รับ'}</td><td class="b"><button class="sm" data-e="${a.id}">แก้ไข</button><button class="sm del" data-d="${a.id}">ลบ</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">ยังไม่มีกิจกรรมในหมวดนี้</td></tr>';
+ $('cats').innerHTML=cats.length?cats.map(c=>`<div class="crow"><b>${esc(c.name)}</b><small>${c.count} กิจกรรม</small><button class="sm" data-r="${c.id}">แก้ไขชื่อ</button><button class="sm del" data-x="${c.id}">ลบ</button></div>`).join(''):'<p class="empty">ยังไม่มีหมวดหมู่</p>';
+}
+async function reload(){[cats,acts]=await Promise.all([api('/api/categories'),api('/api/activities')]);render()}
+
+$('addForm').onsubmit=run(async e=>{
+ if(!cats.length)return toast('กรุณาเพิ่มหมวดหมู่ก่อน');
+ const f=build('a');if(!f)return;
+ await api('/api/activities',{method:'POST',body:f});
+ e.target.reset();prev('a');await reload();toast('เพิ่มกิจกรรมแล้ว')});
+
+$('chips').onclick=e=>{const c=e.target.dataset.c;if(c){cur=c;render()}};
+$('rows').onclick=run(async e=>{
+ const ed=e.target.dataset.e,dl=e.target.dataset.d;
+ if(ed){const a=acts.find(x=>x.id==ed);editId=a.id;$('en').value=a.name;$('ec').value=a.category_id;$('eh').value=a.hours;$('ed').value=a.description;
+  $('ei').value='';$('eu').value=okUrl(a.image)?a.image:'';prev('e');$('dlg').showModal()}
+ if(dl&&confirm('ลบกิจกรรมนี้ใช่หรือไม่?')){await api('/api/activities/'+dl,{method:'DELETE'});await reload();toast('ลบกิจกรรมแล้ว')}});
+$('editForm').onsubmit=run(async()=>{
+ const f=build('e');if(!f)return;
+ await api('/api/activities/'+editId,{method:'PUT',body:f});
+ $('dlg').close();await reload();toast('บันทึกการแก้ไขแล้ว')});
+$('cancel').onclick=()=>$('dlg').close();
+
+$('catForm').onsubmit=run(async e=>{
+ const n=$('catName').value.trim();if(!n)return;
+ await api('/api/categories',J('POST',{name:n}));e.target.reset();await reload();toast('เพิ่มหมวดหมู่แล้ว')});
+$('cats').onclick=run(async e=>{
+ const r=e.target.dataset.r,x=e.target.dataset.x;
+ if(r){const c=cats.find(k=>k.id==r),n=(prompt('ชื่อหมวดหมู่ใหม่',c.name)||'').trim();if(!n||n===c.name)return;
+  await api('/api/categories/'+r,J('PUT',{name:n}));if(cur===c.name)cur=n;await reload();toast('แก้ไขชื่อหมวดหมู่แล้ว')}
+ if(x){const c=cats.find(k=>k.id==x);if(c.count)return toast('ลบไม่ได้: ยังมีกิจกรรมอยู่ในหมวดนี้');
+  if(confirm('ลบหมวดหมู่ "'+c.name+'" ใช่หรือไม่?')){await api('/api/categories/'+x,{method:'DELETE'});await reload();toast('ลบหมวดหมู่แล้ว')}}});
+
+$('gear').onclick=()=>{const m=$('menu');m.hidden=!m.hidden;$('gear').setAttribute('aria-expanded',!m.hidden)};
+document.addEventListener('click',e=>{if(!e.target.closest('.gearw'))$('menu').hidden=true});
+$('logout').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST'})}catch(_){}location.href='admin-login.html'};
+
+(async()=>{try{
+ const me=await api('/api/me');
+ if(me.role!=='admin'){location.href='admin-login.html';return}
+ $('who').textContent=me.name+'[Admin]';await reload();
+}catch(_){}})();
+</script>
+</body>
+</html>

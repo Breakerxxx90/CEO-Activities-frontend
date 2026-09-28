@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Playfair+Display:wght@800&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||"light"}catch(e){}</script>
+<link rel="stylesheet" href="style.css"><title>Profile</title></head><body data-page="profile"><div id="nav"></div>
+<div class="prof"><div>
+<div class="box"><div class="who"><i data-i="avatar"></i><div><b data-u="name">Username</b><small><span data-t="class">Class</span> : <span data-u="cls">Student</span></small></div></div>
+<nav class="menu"><a class="mi on" id="profileBtn" href="profile.html"><i data-i="userline"></i><span data-t="myprofile">My Profile</span><i data-i="play"></i></a>
+<a class="mi" id="settingBtn" href="#setting" aria-expanded="false" aria-controls="setting"><i data-i="gear"></i><span data-t="setting">Setting</span><i data-i="play"></i></a>
+<button class="mi" id="notiToggle" type="button"><i data-i="bell"></i><span data-t="noti">notification</span><small>Allow</small></button>
+<a class="mi" href="login.html"><i data-i="logout"></i><span data-t="logout">Logout</span></a></nav></div>
+<div class="box setting" id="setting" hidden><h3 data-t="setting">Setting</h3>
+<div class="avset"><div class="avhd" data-t="avatar">Profile picture</div>
+<div class="avbtns"><button class="avbtn" id="avPick" type="button" data-t="avDevice">Choose from device</button><input id="avFile" type="file" accept="image/*" hidden><button class="avbtn del" id="avDel" type="button" data-t="avRemove">Remove</button></div>
+<div class="avurl"><input id="avUrl" type="url" data-tp="avUrlPh" placeholder="https://example.com/photo.jpg" aria-label="Image link"><button class="avbtn" id="avGo" type="button" data-t="avUse">Use link</button></div>
+<p class="avmsg" id="avMsg" role="status"></p></div>
+<label class="st"><span data-t="theme">Theme</span><select id="themeSel"><option value="light" data-t="light">Light</option><option value="dark" data-t="dark">Dark</option></select></label>
+<label class="st"><span data-t="language">Language</span><select id="langSel"><option value="en">Eng</option><option value="th">ไทย</option></select></label></div></div>
+<div class="box"><div class="who" style="margin-left:90px"><i data-i="avatar" style="position:absolute;margin-left:-90px"></i><div><b data-u="name">Username</b><small><span data-t="class">Class</span> : <span data-u="cls">Student</span></small></div></div>
+<div class="info"><label class="f"><span data-t="name">Name</span><input data-u="name"></label><label class="f"><span data-t="class">Class</span><input data-u="cls"></label><label class="f"><span data-t="uni">University</span><input data-u="uni"></label></div>
+<button class="save" id="save" type="button" data-t="save">Save Change</button></div></div>
+<script src="app.js"></script></body></html>
